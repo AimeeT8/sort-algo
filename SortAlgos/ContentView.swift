@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State private var timerSpeed = 0.1
     
+    @State private var insertionSortPosition = 1
+    
     
     var body: some View {
         VStack(spacing: 20) {
@@ -43,6 +45,7 @@ struct ContentView: View {
                 Button("Shuffle") {
                     withAnimation {
                         values.shuffle()
+                        insertionSortPosition = 1
                     }
                 }
             }
