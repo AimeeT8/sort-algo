@@ -28,9 +28,17 @@ struct ContentView: View {
                 }
             }
             .padding(.bottom)
+            
+            Button("Step", action: step)
         }
         .padding()
         
+    }
+    
+    func step() {
+        withAnimation {
+            values.bubbleSort()
+        }
     }
 }
 
