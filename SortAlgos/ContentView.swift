@@ -11,6 +11,7 @@ struct ContentView: View {
     enum SortTypes: String, CaseIterable {
         case bubble = "Bubble Sort"
         case insertion = "Inserition Sort"
+        case quick = "Quicksort"
     }
     
     @State private var values = (1...100).map(SortValue.init).shuffled()
@@ -83,6 +84,8 @@ struct ContentView: View {
                 values.bubbleSort()
             case .insertion:
                 insertionSortPosition = values.insertionSort(startPosition: insertionSortPosition)
+            case .quick:
+                values.quickSort()
             }
         }
     }

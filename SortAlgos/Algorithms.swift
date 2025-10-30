@@ -30,4 +30,15 @@ extension Array where Element: Comparable {
         self[currentItemIndex] = itemToPlace
         return startPosition + 1
     }
+    
+    mutating func quickSort() {
+        guard count > 1 else { return }
+        
+        let pivot = self[Int.random(in: 0..<count)]
+        let before = self.filter { $0 < pivot }
+        let after = self.filter { $0 > pivot }
+        let equal = self.filter { $0 == pivot }
+        
+        self = before + equal + after 
+    }
 }
