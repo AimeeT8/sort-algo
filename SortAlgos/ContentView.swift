@@ -11,6 +11,9 @@ struct ContentView: View {
     
     @State private var values = (1...100).map(SortValue.init).shuffled()
     
+    @State private var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    @State private var timerSpeed = 0.1
+    
     
     var body: some View {
         VStack(spacing: 20) {
@@ -21,7 +24,7 @@ struct ContentView: View {
             GeometryReader { proxy in
                 HStack(spacing: 0) {
                     ForEach(values) { value in
-                            Rectangle()
+                        Rectangle()
                             .fill(value.color)
                             .frame(width: proxy.size.width * 0.01, height: proxy.size.height * Double(value.id) / 100)
                     }
@@ -29,10 +32,32 @@ struct ContentView: View {
             }
             .padding(.bottom)
             
-            Button("Step", action: step)
+            HStack(spacing: 20) {
+                LabeledContent("Speed") {
+                    Slider(value: $timerSpeed, in: 0...1)
+                }
+                .frame(maxWidth: 400)
+                
+                Button("Step", action: step)
+                
+                Button("Shuffle") {
+                    withAnimation {
+                        values.shuffle()
+                    }
+                }
+            }
         }
         .padding()
-        
+        .onReceive(timer) { _ in
+            step()
+        }
+        .onChange(of: timerSpeed) {
+            timer.upstream.connect().cancel()
+            
+            if timerSpeed != 0 {
+                timer = Timer.publish(every: timerSpeed, on: .main, in: .common).autoconnect()
+            }
+        }
     }
     
     func step() {
