@@ -8,11 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    enum SortTypes: String, CaseIterable {
+        case bubble = "Bubble Sort"
+        case insertion = "Inserition Sort"
+    }
     
     @State private var values = (1...100).map(SortValue.init).shuffled()
     
     @State private var timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
     @State private var timerSpeed = 0.1
+    
+    @State private var sortFunction = SortTypes.bubble
     
     @State private var insertionSortPosition = 1
     
@@ -33,6 +39,13 @@ struct ContentView: View {
                 }
             }
             .padding(.bottom)
+            
+            Picker("Sort Type", selection: $sortFunction) {
+                ForEach(SortTypes.allCases, id: \.self) {
+                    Text($0.rawValue)
+                }
+            }
+            .pickerStyle(.segmented)
             
             HStack(spacing: 20) {
                 LabeledContent("Speed") {
@@ -65,7 +78,12 @@ struct ContentView: View {
     
     func step() {
         withAnimation {
-            values.bubbleSort()
+            switch sortFunction {
+            case .bubble:
+                values.bubbleSort()
+            case .insertion:
+                insertionSortPosition = values.insertionSort(startPosition: insertionSortPosition)
+            }
         }
     }
 }
